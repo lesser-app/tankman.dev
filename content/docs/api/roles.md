@@ -20,7 +20,7 @@ Payload:
 
 ```json
 {
-	"id": "administrators",
+	"id": "admins",
 	"data": "data for admins"
 }
 ```
@@ -30,7 +30,7 @@ Response:
 ```json
 {
 	"data": {
-		"id": "administrators",
+		"id": "admins",
 		"data": "data for admins",
 		"createdAt": "2023-07-02T08:31:59.7931788Z",
 		"orgId": "example.com",
@@ -79,7 +79,7 @@ To get a single role (as a list with one item), specific the Role's id.
 HTTP GET /orgs/{orgId}/roles/{roleId}
 
 # For example
-HTTP GET /orgs/example.com/roles/administrators
+HTTP GET /orgs/example.com/roles/admins
 ```
 
 You can specify multiple Role ids.
@@ -88,7 +88,7 @@ You can specify multiple Role ids.
 HTTP GET /orgs/{orgId}/roles/{roleId}
 
 # For example
-HTTP GET /orgs/example.com/roles/administrators,devops
+HTTP GET /orgs/example.com/roles/admins,devops
 ```
 
 
@@ -98,7 +98,7 @@ HTTP GET /orgs/example.com/roles/administrators,devops
 HTTP PUT /orgs/{orgId}/roles/{roleId}
 
 # For example:
-HTTP PUT /orgs/example.com/roles/administrators
+HTTP PUT /orgs/example.com/roles/admins
 ```
 
 Payload:
@@ -114,7 +114,7 @@ Response:
 ```json
 {
 	"data": {
-		"id": "administrators",
+		"id": "admins",
 		"data": "new data for admins",
 		"createdAt": "2023-07-02T08:31:59.793178Z",
 		"orgId": "example.com",
@@ -131,7 +131,7 @@ Deleting a role will also delete associated permissions.
 HTTP DELETE /orgs/{orgId}/roles/{roleId}
 
 # For example:
-HTTP DELETE /orgs/example.com/roles/administrators
+HTTP DELETE /orgs/example.com/roles/admins
 ```
 
 ## Add a Custom Property
@@ -142,14 +142,14 @@ You can add custom string properties to an Role entity.
 HTTP PUT: /orgs/{orgId}/roles/{roleId}/properties/{propertyName}
 
 For example:
-HTTP PUT: /orgs/example.com/roles/administrators/properties/country
+HTTP PUT: /orgs/example.com/roles/admins/properties/privileged
 ```
 
 Payload:
 
 ```json
 {
-	"value": "India"
+	"value": "yes"
 }
 ```
 
@@ -166,9 +166,9 @@ Response:
 }
 ```
 
-When properties are added to an Org, they are returned when the Org is fetched.
+When properties are added to an Role, they are returned when the Role is fetched.
 
-For example, `GET /orgs/example.com` will retrieve the following response. Note the added properties object.
+For example, `GET /orgs/example.com/roles/admins` will retrieve the following response. Note the added properties object.
 
 ```json
 {
@@ -176,9 +176,9 @@ For example, `GET /orgs/example.com` will retrieve the following response. Note 
 		{
 			"id": "example.com",
 			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
+			"data": "data for admins",
 			"properties": {
-				"country": "India"
+				"privileged": "yes"
 			}
 		}
 	]
@@ -187,13 +187,13 @@ For example, `GET /orgs/example.com` will retrieve the following response. Note 
 
 ## Get the value of a property
 
-Properties are usually read as a part of the fetching entity; Org in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
+Properties are usually read as a part of the fetching entity; Role in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
 
 ```tpl
-HTTP GET /orgs/{orgId}/properties/{propertyName}
+HTTP GET /orgs/{orgId}/roles/{roleId}/properties/{propertyName}
 
 # For example:
-HTTP GET /orgs/example.com/properties/country
+HTTP GET /orgs/example.com/properties/roles/roles/admins/privileged
 ```
 
 Response:
@@ -202,10 +202,12 @@ Response:
 {
 	"data": [
 		{
-			"name": "country",
-			"value": "India",
+			"roleId": "admins",
+			"orgId": "example.com",
+			"name": "privileged",
+			"value": "yes",
 			"hidden": false,
-			"createdAt": "2023-07-02T02:19:15.499711Z"
+			"createdAt": "2023-07-02T12:31:01.978925Z"
 		}
 	]
 }
@@ -215,41 +217,41 @@ Response:
 ## Delete a Custom Property 
 
 ```tpl
-HTTP DELETE: /orgs/{orgId}/properties/{propertyName}
+HTTP DELETE: /orgs/{orgId}/roles/{roleId}/properties/{propertyName}
 
 # For example:
-HTTP DELETE: /orgs/example.com/properties/country
+HTTP DELETE: /orgs/example.com/roles/admins/properties/privileged
 ```
 
 ## Creating Hidden Properties
 
-When a property is hidden, it will not be included when the organization is fetched. To create a hidden property, add the hidden flag when creating the property.
+When a property is hidden, it will not be included when the Role is fetched. To create a hidden property, add the hidden flag when creating the property.
 
 To create a Hidden Property:
 
 ```tpl
-HTTP PUT: /orgs/{orgId}/properties/{propertyName}
+HTTP PUT: /orgs/{orgId}/roles/{roleId}/properties/{propertyName}
 
 # For example:
-HTTP PUT: /orgs/example.com/properties/revenue
+HTTP PUT: /orgs/example.com/roles/admins/properties/active
 ```
 
 Payload should include the `hidden` attribute:
 
 ```json
 {
-  "value": "2340000",
+  "active": "yes",
   "hidden": true
 }
 ```
 
-To include a hidden property when querying Orgs, it should be explicitly mentioned. Note that properties which aren't hidden are always included.
+To include a hidden property when querying Roles, it should be explicitly mentioned. Note that properties which aren't hidden are always included.
 
 ```tpl
-HTTP GET /orgs?properties={propertyName}
+HTTP GET /orgs/{orgId}/roles?properties={propertyName}
 
 For example:
-HTTP GET /orgs?properties={revenue}
+HTTP GET /orgs/example.com/roles?properties=active
 ```
 
 Response:
@@ -258,12 +260,13 @@ Response:
 {
 	"data": [
 		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "new data for example.com",
+			"id": "admins",
+			"data": "data for admins",
+			"createdAt": "2023-07-02T12:30:55.981226Z",
+			"orgId": "example.com",
 			"properties": {
-				"country": "India",
-				"revenue": "2340000"
+				"active": "yes",
+				"privileged": "yes"
 			}
 		}
 	]
@@ -272,11 +275,24 @@ Response:
 
 ## Filtering by Property
 
-Organizations may be filtered by the custom property.
+Roles may be filtered by the custom property.
 
 ```tpl
-HTTP GET /orgs?properties.{propertyName}={propertyValue}
+HTTP GET /orgs/{orgId}/roles?properties.{propertyName}={propertyValue}
 
-# For example, fetch orgs with country = India
-HTTP GET /orgs?properties.country=India
+# For example, fetch roles with active = yes
+HTTP GET /orgs/example.com/roles?properties.active=yes
 ```
+
+## Finds users in a Role
+
+See a list of users who have a specific Role.
+
+```tpl
+HTTP GET /orgs/{orgId}/roles/{roleId}/users
+
+# For example, fetch roles with active = yes
+HTTP GET /orgs/example.com/roles/admins/users
+```
+
+For more on assigning Roles to Users, see the [Users API](/docs/api/users).
