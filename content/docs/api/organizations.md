@@ -3,6 +3,7 @@ weight: 1
 bookFlatSection: true
 title: "Organizations"
 ---
+
 # Organizations
 
 Organizations are at the root of the entity hierarchy, and should be the first thing you should create. You may create as many orgs are you need.
@@ -17,8 +18,8 @@ Payload:
 
 ```json
 {
-	"id": "example.com", // a unique id
-	"data": "data for example.com" // any string
+  "id": "example.com",
+  "data": "data for example.com"
 }
 ```
 
@@ -26,12 +27,12 @@ Response:
 
 ```json
 {
-	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:32:18.4557911Z",
-		"data": "data for example.com",
-		"properties": {}
-	}
+  "data": {
+    "id": "example.com",
+    "createdAt": "2023-07-02T01:32:18.4557911Z",
+    "data": "data for example.com",
+    "properties": {}
+  }
 }
 ```
 
@@ -45,20 +46,20 @@ Response:
 
 ```json
 {
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {}
-		},
+  "data": [
     {
-			"id": "agilehead.com",
-			"createdAt": "2023-07-01T01:38:18.764642Z",
-			"data": "some other data",
-			"properties": {}
-		}
-	]
+      "id": "example.com",
+      "createdAt": "2023-07-02T01:38:18.764642Z",
+      "data": "data for example.com",
+      "properties": {}
+    },
+    {
+      "id": "agilehead.com",
+      "createdAt": "2023-07-01T01:38:18.764642Z",
+      "data": "some other data",
+      "properties": {}
+    }
+  ]
 }
 ```
 
@@ -99,7 +100,7 @@ Payload:
 
 ```json
 {
-	"data": "new data for example.com"
+  "data": "new data for example.com"
 }
 ```
 
@@ -107,12 +108,12 @@ Response:
 
 ```json
 {
-	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:38:18.764642Z",
-		"data": "new data for example.com",
-		"properties": {}
-	}
+  "data": {
+    "id": "example.com",
+    "createdAt": "2023-07-02T01:38:18.764642Z",
+    "data": "new data for example.com",
+    "properties": {}
+  }
 }
 ```
 
@@ -127,7 +128,7 @@ HTTP DELETE /orgs/{orgId}
 HTTP DELETE /orgs/example.com
 ```
 
-Since it can cause a lot of damage, there's an CLI option to require a safetyKey for deleting organizations. 
+Since it can cause a lot of damage, there's an CLI option to require a safetyKey for deleting organizations.
 
 You need to start tankman like this:
 
@@ -147,7 +148,6 @@ HTTP DELETE /orgs/{orgId}?safetyKey=$SAFETY_KEY
 HTTP DELETE /orgs/example.com?safetyKey=NOFOOTGUN
 ```
 
-
 ## Add a Custom Property
 
 You can add custom string properties to an Organization entity.
@@ -159,12 +159,11 @@ For example:
 HTTP PUT /orgs/example.com/properties/country
 ```
 
-
 Payload:
 
 ```json
 {
-	"value": "India"
+  "value": "India"
 }
 ```
 
@@ -172,12 +171,12 @@ Response:
 
 ```json
 {
-	"data": {
-		"name": "country",
-		"value": "India",
-		"hidden": false,
-		"createdAt": "2023-07-02T02:19:15.499711Z"
-	}
+  "data": {
+    "name": "country",
+    "value": "India",
+    "hidden": false,
+    "createdAt": "2023-07-02T02:19:15.499711Z"
+  }
 }
 ```
 
@@ -187,16 +186,16 @@ For example, `GET /orgs/example.com` will retrieve the following response. Note 
 
 ```json
 {
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {
-				"country": "India"
-			}
-		}
-	]
+  "data": [
+    {
+      "id": "example.com",
+      "createdAt": "2023-07-02T01:38:18.764642Z",
+      "data": "data for example.com",
+      "properties": {
+        "country": "India"
+      }
+    }
+  ]
 }
 ```
 
@@ -215,19 +214,18 @@ Response:
 
 ```json
 {
-	"data": [
-		{
-			"name": "country",
-			"value": "India",
-			"hidden": false,
-			"createdAt": "2023-07-02T02:19:15.499711Z"
-		}
-	]
+  "data": [
+    {
+      "name": "country",
+      "value": "India",
+      "hidden": false,
+      "createdAt": "2023-07-02T02:19:15.499711Z"
+    }
+  ]
 }
 ```
 
-
-## Delete a Custom Property 
+## Delete a Custom Property
 
 ```tpl
 HTTP DELETE /orgs/{orgId}/properties/{propertyName}
@@ -271,17 +269,17 @@ Response:
 
 ```json
 {
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "new data for example.com",
-			"properties": {
-				"country": "India",
-				"revenue": "2340000"
-			}
-		}
-	]
+  "data": [
+    {
+      "id": "example.com",
+      "createdAt": "2023-07-02T01:38:18.764642Z",
+      "data": "new data for example.com",
+      "properties": {
+        "country": "India",
+        "revenue": "2340000"
+      }
+    }
+  ]
 }
 ```
 

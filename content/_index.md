@@ -10,7 +10,7 @@ type: docs
 
 ![Tankman](tankman-ai.png)
 
-Many SaaS apps need a way to store organizations, users, roles, permissions and to authorize access. Tankman manages all of these, and comes with a simple REST API. It is MIT licensed, [Open Source](https://github.com/lesser-app/tankman), downloadable as a binary, and uses PostgreSQL as the database.
+Many SaaS apps need a way to store organizations, users, roles, permissions and to authorize access. Tankman manages all of these, and comes with a simple REST API. It is [Open Source](https://github.com/lesser-app/tankman), MIT licensed, downloadable as a binary, and uses PostgreSQL as the database.
 
 Tankman is NOT an Identity and Authentication server. But it can play well with Open Source solutions like [Ory Kratos](https://github.com/ory/kratos), various OAuth based providers, or your own custom authentication mechanism.
 
