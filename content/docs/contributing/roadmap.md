@@ -25,9 +25,7 @@ title: "Roadmap"
 ## Help Wanted
 
 1. Test Suite. We need to build a full test suite. This is our highest priority item.
-
 2. Clean upthe Documentation
-
 3. Document patterns to use for Authorization.
 
 
