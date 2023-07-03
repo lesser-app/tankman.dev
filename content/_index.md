@@ -19,7 +19,7 @@ Tankman is NOT an Identity and Authentication server. But it can play well with 
 - Manage organizations, roles, users, resources and permissions
 - Assign roles to users
 - Assign user permissions and role permissions to various resources
-- Attach properties to Orgs, Roles, Users and query them
+- Attach custom properties to Orgs, Roles, Users and query them
 
 ## Why not umm... say Google Zanzibar, Auth0 etc?
 
@@ -29,5 +29,5 @@ To see how Tankman should be deployed, see [Deploying Tankman](https://example.c
 
 ## It's an early Beta
 
-Tankman is quite new and you might find a few issues. We expect to iron out them out over the next few months and release the first version in Q4 2023. We'll need help - you're invited to [join us on GitHub](https://github.com/lesser-app/tankman).
+Tankman is quite new and you might find a few issues. We expect to iron them out over the next few months and release the first version in Q4 2023. We'll need help - you're invited to [join us on GitHub](https://github.com/lesser-app/tankman).
 

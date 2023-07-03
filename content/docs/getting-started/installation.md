@@ -9,10 +9,12 @@ title: "Installation"
 ## Install Tankman
 
 Download binaries for your platform
-- [Linux x86-64](https://example.com)
-- [Linux ARM64](https://example.com)
-- [macOS M1](https://example.com)
-- [Windows x86-64 (untested)](https://example.com)
+- For most Linux distros [Linux x86-64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-linux-x64) 
+- For Linux distros using musl [Linux x86-64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-linux-musl-x64) 
+- For ARM 64 bit Linux distros [Linux ARM64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-linux-arm64)
+- [macOS M1](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-osx13-arm64)
+- [macOS x64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-osx-x64)
+- [Windows x86-64 (untested)](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-win-x64.exe)
 - [Source Code](https://github.com/lesser-app/tankman)
 
 ## Docker
