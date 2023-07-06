@@ -10,9 +10,9 @@ type: docs
 
 ![Tankman](tankman-ai.png)
 
-Many SaaS apps need a way to store organizations, users, roles, permissions and to authorize access. Tankman manages these and comes with a simple REST API. It is [Open Source](https://github.com/lesser-app/tankman), MIT licensed, downloadable as a binary, and uses PostgreSQL as the database.
+Tankman is a valuable tool for SaaS applications that require storage for organizations, users, roles, permissions, and access authorization. It offers a user-friendly REST API and is an [open-source solution](https://github.com/lesser-app/tankman) available on GitHub under the MIT license. Users can easily download it as a binary, and it utilizes PostgreSQL as its underlying database.
 
-Tankman is NOT an Identity and Authentication server. But it can play well with Open Source solutions like [Ory Kratos](https://github.com/ory/kratos), various OAuth based providers, or your own custom authentication mechanism.
+It's important to note that Tankman does not function as an Identity and Authentication server. However, it seamlessly integrates with popular open-source solutions such as [Ory Kratos](https://github.com/ory/kratos), various OAuth-based providers, or even your own custom authentication mechanism.
 
 ## What can it do?
 
@@ -23,9 +23,9 @@ Tankman is NOT an Identity and Authentication server. But it can play well with 
 
 ## Why not umm... say Google Zanzibar, Auth0 etc?
 
-Tankman is for startups who want a self-hosted, lightweight solution. It provides basic primitives for authorization; which is more often than not what you'll need.
+Tankman is designed for startups that prefer a self-hosted, lightweight solution. It provides essential primitives for authorization, which are often sufficient for most use cases.
 
 ## It's an early Beta
 
-Tankman is quite new and you might find a few issues. We expect to iron them out over the next few months and release the first version in Q4 2023. We'll need help - you're invited to [join us on GitHub](https://github.com/lesser-app/tankman).
+Tankman is relatively new, so you might encounter a few issues. We expect to iron them out over the next few months and plan to release the first version in Q4 2023. We welcome your help and invite you to [join us on GitHub](https://github.com/lesser-app/tankman).
 
