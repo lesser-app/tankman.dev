@@ -12,7 +12,7 @@ type: docs
 
 Tankman is a valuable tool for SaaS applications that require storage for organizations, users, roles, permissions, and access authorization. It offers a user-friendly REST API and is an [open-source solution](https://github.com/lesser-app/tankman) available on GitHub under the MIT license. Users can easily download it as a binary, and it utilizes PostgreSQL as its underlying database.
 
-It's important to note that Tankman does not function as an Identity and Authentication server. However, it seamlessly integrates with popular open-source solutions such as [Ory Kratos](https://github.com/ory/kratos), various OAuth-based providers, or even your own custom authentication mechanism.
+It's important to note that Tankman does not function as an Identity and Authentication server. However, it can work well with popular open-source solutions such as [Ory Kratos](https://github.com/ory/kratos), various OAuth-based providers, or even your own custom authentication mechanism.
 
 ## What can it do?
 
