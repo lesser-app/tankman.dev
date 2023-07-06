@@ -21,9 +21,11 @@ It's important to note that Tankman does not function as an Identity and Authent
 - Assign user permissions and role permissions to various resources
 - Attach custom properties to Orgs, Roles, Users and query them
 
-## Why not umm... say Google Zanzibar, Auth0 etc?
+## Why should I use Tankman over Auth0, Google Zanzibar etc?
 
-Tankman is designed for startups that prefer a self-hosted, lightweight solution. It provides essential primitives for authorization, which are often sufficient for most use cases.
+Tankman is for people who prefer a self-hosted, lightweight solution. It provides essential primitives for authorization, which are often sufficient for most use cases.
+
+It is worth noting that the other alternatives mentioned are undoubtedly more capable and encompass a broader range of features. If you find yourself in need of those advanced features, it would be more suitable for you to opt for one of those alternatives.
 
 ## It's an early Beta
 
