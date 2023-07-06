@@ -3,22 +3,38 @@ weight: 4
 bookFlatSection: true
 title: "Resources"
 ---
-# Organizations
 
-Organizations are at the root of the entity hierarchy, and should be the first thing you should create. You may create as many orgs are you need.
+# Resources
 
-## Create an Organization
+Resources belong to Organizations - and they're names of various entities in the Organization. We use Unix-like paths to represent entities in an organization.
+
+Let's see some examples.
+
+Here's how you'd store some file paths.
+
+- /files/legal/abc.doc
+- /files/marketing/another.html
+
+But anything can be a path. For example, if you wanted to control access to a feature, you could define a path as follows and check a user's permissions to it.
+
+- /features/sellbitcoin
+- /features/bulkbuy
+
+## Create a Resource
 
 ```tpl
-HTTP POST /orgs
+HTTP POST /orgs/{orgId}/resources
+
+For example:
+HTTP POST /orgs/example.com/resources
 ```
 
 Payload:
 
 ```json
 {
-	"id": "example.com", // a unique id
-	"data": "data for example.com" // any string
+  "id": "/root/drives/c/home",
+  "data": "data for /root/drives/c/home"
 }
 ```
 
@@ -26,80 +42,86 @@ Response:
 
 ```json
 {
-	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:32:18.4557911Z",
-		"data": "data for example.com",
-		"properties": {}
-	}
+  "data": {
+    "id": "/root/drives/c/home",
+    "data": "data for /root/drives/c/home",
+    "createdAt": "2023-07-06T13:40:03.4217161Z",
+    "orgId": "example.com"
+  }
 }
 ```
 
-## Get Organizations
+## Get Resources
 
 ```tpl
-HTTP GET /orgs
+HTTP GET /orgs/{orgId}/resources
+
+For example:
+HTTP GET /orgs/example.com/resources
 ```
 
 Response:
 
 ```json
 {
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {}
-		},
+  "data": [
     {
-			"id": "agilehead.com",
-			"createdAt": "2023-07-01T01:38:18.764642Z",
-			"data": "some other data",
-			"properties": {}
-		}
-	]
+      "id": "/root/drives/c/home",
+      "data": "data for /root/drives/c/home",
+      "createdAt": "2023-07-06T13:40:03.421716Z",
+      "orgId": "example.com"
+    }
+  ]
 }
 ```
 
 Pagination is done with the `from` and `limit` query parameters.
 
 ```tpl
-HTTP GET /orgs?from=10&limit=100
+HTTP GET /orgs/example.com/resources?from=10&limit=100
 ```
 
-To get a single organization (as a list with one item), specific the Org's id.
+To get a single resource (as a list with one item), specific the Resource's path.
 
 ```tpl
-HTTP GET /orgs/{orgId}
+HTTP GET /orgs/{orgId}/resources/{resourcePath}
 
 # For example
-HTTP GET /orgs/example.com
+HTTP GET /orgs/example.com/resources/root/drives/c/home
 ```
 
-You can specify multiple Org ids.
+## Wildcard searches
+
+A wildcard search allows you to search for all resources starting with a certain path. The wildcard character to use is a tilde(~).
 
 ```tpl
-HTTP GET /orgs/{orgId1,orgId2}
+HTTP GET /orgs/{orgId}/resources/{basePath}/~
 
 # For example
-HTTP GET /orgs/example.com,northwind
+HTTP GET /orgs/example.com/resources/root/drives/~
 ```
 
-## Update an Organization
+Assume you have the following resources:
+
+- /orgs/example.com/resources/root/drives/c/home
+- /orgs/example.com/resources/root/drives/d/home
+
+The request `HTTP GET /orgs/example.com/resources/root/drives/~` will fetch both since they start with `/root/drives/`.
+
+## Update a Resource
 
 ```tpl
-HTTP PUT /orgs/{orgId}
+HTTP PUT /orgs/{orgId}/resources/{resourcePath}
 
-# For example:
-HTTP PUT /orgs/example.com
+For example:
+HTTP PUT /orgs/example.com/resources/root/drives/c/home
 ```
 
 Payload:
 
 ```json
 {
-	"data": "new data for example.com"
+  "data": "new data for /root/drives/c/home"
 }
 ```
 
@@ -107,191 +129,22 @@ Response:
 
 ```json
 {
-	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:38:18.764642Z",
-		"data": "new data for example.com",
-		"properties": {}
-	}
+  "id": "/root/drives/c/home",
+  "data": "new data for /root/drives/c/home",
+  "createdAt": "2023-06-30T13:39:29.182724Z",
+  "orgId": "agilehead.com"
 }
 ```
 
-## Delete an Organization
-
-Deleting an organization will delete everything associated with it - resources, roles, users, permissions etc. This is indeed a very destructive operation.
+## DELETE a Resource
 
 ```tpl
-HTTP DELETE /orgs/{orgId}
-
-# For example:
-HTTP DELETE /orgs/example.com
-```
-
-Since it can cause a lot of damage, there's an CLI option to require a safetyKey for deleting organizations. 
-
-You need to start tankman like this:
-
-```sh
-./tankman --safety-key $SAFETY_KEY
-
-# For example:
-./tankman --safety-key NOFOOTGUN
-```
-
-With the `--safety-key` option, HTTP DELETE should specify the safetyKey parameter as a query string.
-
-```tpl
-HTTP DELETE /orgs/{orgId}?safetyKey=$SAFETY_KEY
-
-# For example
-HTTP DELETE /orgs/example.com?safetyKey=NOFOOTGUN
-```
-
-
-## Add a Custom Property
-
-You can add custom string properties to an Organization entity.
-
-```tpl
-HTTP PUT /orgs/{orgId}/properties/{propertyName}
+HTTP DELETE /orgs/{orgId}/resources/{resourcePath}
 
 For example:
-HTTP PUT /orgs/example.com/properties/country
+HTTP DELETE /orgs/example.com/resources/root/drives/c/home
 ```
 
+## Permissions
 
-Payload:
-
-```json
-{
-	"value": "India"
-}
-```
-
-Response:
-
-```json
-{
-	"data": {
-		"name": "country",
-		"value": "India",
-		"hidden": false,
-		"createdAt": "2023-07-02T02:19:15.499711Z"
-	}
-}
-```
-
-When properties are added to an Org, they are returned when the Org is fetched.
-
-For example, `GET /orgs/example.com` will retrieve the following response. Note the added properties object.
-
-```json
-{
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {
-				"country": "India"
-			}
-		}
-	]
-}
-```
-
-## Get the value of a property
-
-Properties are usually read as a part of the fetching entity; Org in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
-
-```tpl
-HTTP GET /orgs/{orgId}/properties/{propertyName}
-
-# For example:
-HTTP GET /orgs/example.com/properties/country
-```
-
-Response:
-
-```json
-{
-	"data": [
-		{
-			"name": "country",
-			"value": "India",
-			"hidden": false,
-			"createdAt": "2023-07-02T02:19:15.499711Z"
-		}
-	]
-}
-```
-
-
-## Delete a Custom Property 
-
-```tpl
-HTTP DELETE /orgs/{orgId}/properties/{propertyName}
-
-# For example:
-HTTP DELETE /orgs/example.com/properties/country
-```
-
-## Creating Hidden Properties
-
-When a property is hidden, it will not be included when the organization is fetched. To create a hidden property, add the hidden flag when creating the property.
-
-To create a Hidden Property:
-
-```tpl
-HTTP PUT /orgs/{orgId}/properties/{propertyName}
-
-# For example:
-HTTP PUT /orgs/example.com/properties/revenue
-```
-
-Payload should include the `hidden` attribute:
-
-```json
-{
-  "value": "2340000",
-  "hidden": true
-}
-```
-
-To include a hidden property when querying Orgs, it should be explicitly mentioned. Note that properties which aren't hidden are always included.
-
-```tpl
-HTTP GET /orgs?properties={propertyName}
-
-For example:
-HTTP GET /orgs?properties={revenue}
-```
-
-Response:
-
-```json
-{
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "new data for example.com",
-			"properties": {
-				"country": "India",
-				"revenue": "2340000"
-			}
-		}
-	]
-}
-```
-
-## Filtering by Property
-
-Organizations may be filtered by the custom property.
-
-```tpl
-HTTP GET /orgs?properties.{propertyName}={propertyValue}
-
-# For example, fetch orgs with country = India
-HTTP GET /orgs?properties.country=India
-```
+See the [Permissions API](../permissions).

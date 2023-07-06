@@ -5,7 +5,7 @@ title: "Roles"
 ---
 # Roles
 
-Roles belong to Organizations.
+Roles belong to an Organization. Users can be assigned Roles. Roles can have Permissions to various Resources.
 
 ## Create a Role
 
@@ -73,7 +73,7 @@ Response:
 }
 ```
 
-To get a single role (as a list with one item), specific the Role's id.
+To get a single role (as a list with one item), specify the Role's id.
 
 ```tpl
 HTTP GET /orgs/{orgId}/roles/{roleId}

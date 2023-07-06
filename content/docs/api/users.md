@@ -3,22 +3,27 @@ weight: 3
 bookFlatSection: true
 title: "Users"
 ---
-# Organizations
+# Users
 
-Organizations are at the root of the entity hierarchy, and should be the first thing you should create. You may create as many orgs are you need.
+Users belong to an organization. Users may belong to Roles, and can have Permissions to various Resources.
 
-## Create an Organization
+## Create a User
 
 ```tpl
-HTTP POST /orgs
+HTTP POST /orgs/{orgId}/users
+
+# For example:
+HTTP POST /orgs/example.com/users
 ```
 
 Payload:
 
 ```json
 {
-	"id": "example.com", // a unique id
-	"data": "data for example.com" // any string
+	"id": "user3",
+	"identityProviderUserId": "jeswinpk@agilehead.com",
+	"identityProvider": "Google",
+	"data": "data for aser3"
 }
 ```
 
@@ -27,18 +32,25 @@ Response:
 ```json
 {
 	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:32:18.4557911Z",
-		"data": "data for example.com",
-		"properties": {}
+		"roleIds": [],
+		"properties": {},
+		"id": "user3",
+		"data": "data for aser3",
+		"identityProvider": "Google",
+		"identityProviderUserId": "jeswinpk@agilehead.com",
+		"createdAt": "2023-07-06T13:01:26.6594794Z",
+		"orgId": "example.com"
 	}
 }
 ```
 
-## Get Organizations
+## Get Users
 
 ```tpl
-HTTP GET /orgs
+HTTP GET /orgs/{orgId}/users/
+
+For example:
+HTTP GET /orgs/example.com/users/
 ```
 
 Response:
@@ -47,59 +59,54 @@ Response:
 {
 	"data": [
 		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {}
-		},
-    {
-			"id": "agilehead.com",
-			"createdAt": "2023-07-01T01:38:18.764642Z",
-			"data": "some other data",
-			"properties": {}
+			"roleIds": [],
+			"properties": {},
+			"id": "user3",
+			"data": "data for aser3",
+			"identityProvider": "Google",
+			"identityProviderUserId": "jeswinpk@agilehead.com",
+			"createdAt": "2023-07-06T13:01:26.659479Z",
+			"orgId": "example.com"
 		}
 	]
 }
 ```
 
-Pagination is done with the `from` and `limit` query parameters.
+To get a single user (as a list with one item), specify the user's id.
 
 ```tpl
-HTTP GET /orgs?from=10&limit=100
-```
-
-To get a single organization (as a list with one item), specific the Org's id.
-
-```tpl
-HTTP GET /orgs/{orgId}
+HTTP GET /orgs/{orgId}/users/{userId}
 
 # For example
-HTTP GET /orgs/example.com
+HTTP GET /orgs/example.com/users/user3
 ```
 
-You can specify multiple Org ids.
+You can specify multiple user ids.
 
 ```tpl
-HTTP GET /orgs/{orgId1,orgId2}
+HTTP GET /orgs/{orgId}/users/{userId}
 
 # For example
-HTTP GET /orgs/example.com,northwind
+HTTP GET /orgs/example.com/users/user3,user5
 ```
 
-## Update an Organization
+
+## Update a user
 
 ```tpl
-HTTP PUT /orgs/{orgId}
+HTTP PUT /orgs/{orgId}/users/{userId}
 
 # For example:
-HTTP PUT /orgs/example.com
+HTTP PUT /orgs/example.com/users/user3
 ```
 
 Payload:
 
 ```json
 {
-	"data": "new data for example.com"
+	"identityProviderUserId": "jeswinpk@agilehead.com",
+	"identityProvider": "Google",
+	"data": "new data for user3"
 }
 ```
 
@@ -108,63 +115,95 @@ Response:
 ```json
 {
 	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:38:18.764642Z",
-		"data": "new data for example.com",
-		"properties": {}
+		"roleIds": [],
+		"properties": {},
+		"id": "user3",
+		"data": "new data for user3",
+		"identityProvider": "Google",
+		"identityProviderUserId": "jeswinpk@agilehead.com",
+		"createdAt": "2023-07-06T13:01:26.659479Z",
+		"orgId": "example.com"
 	}
 }
 ```
 
-## Delete an Organization
+## Delete a user
 
-Deleting an organization will delete everything associated with it - resources, roles, users, permissions etc. This is indeed a very destructive operation.
-
-```tpl
-HTTP DELETE /orgs/{orgId}
-
-# For example:
-HTTP DELETE /orgs/example.com
-```
-
-Since it can cause a lot of damage, there's an CLI option to require a safetyKey for deleting organizations. 
-
-You need to start tankman like this:
-
-```sh
-./tankman --safety-key $SAFETY_KEY
-
-# For example:
-./tankman --safety-key NOFOOTGUN
-```
-
-With the `--safety-key` option, HTTP DELETE should specify the safetyKey parameter as a query string.
+Deleting a user will also delete associated user permissions.
 
 ```tpl
-HTTP DELETE /orgs/{orgId}?safetyKey=$SAFETY_KEY
+HTTP DELETE /orgs/{orgId}/users/{userId}
 
-# For example
-HTTP DELETE /orgs/example.com?safetyKey=NOFOOTGUN
+# For example:
+HTTP DELETE /orgs/example.com/users/user3
 ```
 
+## Assiging Roles
+
+```tpl
+HTTP POST /orgs/{orgId}/users/{userId}/roles
+
+# For example:
+HTTP DELETE /orgs/example.com/users/user3/roles
+```
+
+Payload:
+
+```json
+{
+	"roleId": "admins"
+}
+```
+
+Response:
+
+```json
+{
+	"data": {
+		"userId": "user3",
+		"roleId": "admins",
+		"createdAt": "2023-07-01T11:57:54.0264874Z",
+		"orgId": "agilehead.com"
+	}
+}
+```
+
+## Unassigning Roles
+
+```tpl
+HTTP DELETE /orgs/{orgId}/users/{userId}/roles/{roleId}
+
+# For example:
+HTTP DELETE /orgs/example.com/users/user3/roles/admins
+```
+
+## Finds users in a Role
+
+See a list of users who have a specific Role.
+
+```tpl
+HTTP GET /orgs/{orgId}/roles/{roleId}/users
+
+# For example, fetch roles with active = yes
+HTTP GET /orgs/example.com/roles/admins/users
+```
 
 ## Add a Custom Property
 
-You can add custom string properties to an Organization entity.
+You can add custom string properties to an user entity.
 
 ```tpl
-HTTP PUT /orgs/{orgId}/properties/{propertyName}
+HTTP PUT: /orgs/{orgId}/users/{userId}/properties/{propertyName}
 
 For example:
-HTTP PUT /orgs/example.com/properties/country
+HTTP PUT: /orgs/example.com/users/user3/properties/firstName
 ```
-
 
 Payload:
 
 ```json
 {
-	"value": "India"
+	"value": "Jeswin"
 }
 ```
 
@@ -173,28 +212,32 @@ Response:
 ```json
 {
 	"data": {
-		"name": "country",
-		"value": "India",
+		"name": "firstName",
+		"value": "Jeswin",
 		"hidden": false,
-		"createdAt": "2023-07-02T02:19:15.499711Z"
+		"createdAt": "2023-07-06T13:07:41.8782012Z"
 	}
 }
 ```
 
-When properties are added to an Org, they are returned when the Org is fetched.
+When properties are added to an user, they are returned when the user is fetched.
 
-For example, `GET /orgs/example.com` will retrieve the following response. Note the added properties object.
+For example, `GET /orgs/example.com/users/user3` will retrieve the following response. Note the added properties object.
 
 ```json
 {
 	"data": [
 		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
+			"roleIds": [],
 			"properties": {
-				"country": "India"
-			}
+				"firstName": "Jeswin"
+			},
+			"id": "user3",
+			"data": "new data for user3",
+			"identityProvider": "Google",
+			"identityProviderUserId": "jeswinpk@agilehead.com",
+			"createdAt": "2023-07-06T13:01:26.659479Z",
+			"orgId": "example.com"
 		}
 	]
 }
@@ -202,13 +245,13 @@ For example, `GET /orgs/example.com` will retrieve the following response. Note 
 
 ## Get the value of a property
 
-Properties are usually read as a part of the fetching entity; Org in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
+Properties are usually read as a part of the fetching entity; user in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
 
 ```tpl
-HTTP GET /orgs/{orgId}/properties/{propertyName}
+HTTP GET /orgs/{orgId}/users/{userId}/properties/{propertyName}
 
 # For example:
-HTTP GET /orgs/example.com/properties/country
+HTTP GET /orgs/example.com/properties/users/users/user3/firstName
 ```
 
 Response:
@@ -217,10 +260,12 @@ Response:
 {
 	"data": [
 		{
-			"name": "country",
-			"value": "India",
+			"userId": "user3",
+			"orgId": "example.com",
+			"name": "firstName",
+			"value": "Jeswin",
 			"hidden": false,
-			"createdAt": "2023-07-02T02:19:15.499711Z"
+			"createdAt": "2023-07-06T13:07:41.878201Z"
 		}
 	]
 }
@@ -230,41 +275,41 @@ Response:
 ## Delete a Custom Property 
 
 ```tpl
-HTTP DELETE /orgs/{orgId}/properties/{propertyName}
+HTTP DELETE: /orgs/{orgId}/users/{userId}/properties/{propertyName}
 
 # For example:
-HTTP DELETE /orgs/example.com/properties/country
+HTTP DELETE: /orgs/example.com/users/user3/properties/firstName
 ```
 
 ## Creating Hidden Properties
 
-When a property is hidden, it will not be included when the organization is fetched. To create a hidden property, add the hidden flag when creating the property.
+When a property is hidden, it will not be included when the user is fetched. To create a hidden property, add the hidden flag when creating the property.
 
 To create a Hidden Property:
 
 ```tpl
-HTTP PUT /orgs/{orgId}/properties/{propertyName}
+HTTP PUT: /orgs/{orgId}/users/{userId}/properties/{propertyName}
 
 # For example:
-HTTP PUT /orgs/example.com/properties/revenue
+HTTP PUT: /orgs/example.com/users/user3/properties/active
 ```
 
 Payload should include the `hidden` attribute:
 
 ```json
 {
-  "value": "2340000",
+  "active": "yes",
   "hidden": true
 }
 ```
 
-To include a hidden property when querying Orgs, it should be explicitly mentioned. Note that properties which aren't hidden are always included.
+To include a hidden property when querying users, it should be explicitly mentioned. Note that properties which aren't hidden are always included.
 
 ```tpl
-HTTP GET /orgs?properties={propertyName}
+HTTP GET /orgs/{orgId}/users?properties={propertyName}
 
 For example:
-HTTP GET /orgs?properties={revenue}
+HTTP GET /orgs/example.com/users?properties=active
 ```
 
 Response:
@@ -273,13 +318,17 @@ Response:
 {
 	"data": [
 		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "new data for example.com",
+			"roleIds": [],
 			"properties": {
-				"country": "India",
-				"revenue": "2340000"
-			}
+				"active": "yes",
+				"firstName": "Jeswin"
+			},
+			"id": "user3",
+			"data": "new data for user3",
+			"identityProvider": "Google",
+			"identityProviderUserId": "jeswinpk@agilehead.com",
+			"createdAt": "2023-07-06T13:01:26.659479Z",
+			"orgId": "example.com"
 		}
 	]
 }
@@ -287,11 +336,32 @@ Response:
 
 ## Filtering by Property
 
-Organizations may be filtered by the custom property.
+users may be filtered by the custom property.
 
 ```tpl
-HTTP GET /orgs?properties.{propertyName}={propertyValue}
+HTTP GET /orgs/{orgId}/users?properties.{propertyName}={propertyValue}
 
-# For example, fetch orgs with country = India
-HTTP GET /orgs?properties.country=India
+# For example, fetch users with active = yes
+HTTP GET /orgs/example.com/users?properties.active=yes
+```
+
+Response:
+
+```json
+{
+	"data": [
+		{
+			"roleIds": [],
+			"properties": {
+				"firstName": "Jeswin"
+			},
+			"id": "user3",
+			"data": "new data for user3",
+			"identityProvider": "Google",
+			"identityProviderUserId": "jeswinpk@agilehead.com",
+			"createdAt": "2023-07-06T13:01:26.659479Z",
+			"orgId": "example.com"
+		}
+	]
+}
 ```

@@ -17,10 +17,6 @@ Download binaries for your platform
 - [Windows x86-64 (untested)](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-win-x64.exe)
 - [Source Code](https://github.com/lesser-app/tankman)
 
-## Docker
-
-Alternatively you can pull our docker images.
-
 ## Setting up Tankman
 
 Step 1: Create a new database for tankman on your PostgreSQL server. Call it whatever you want, but most people call it tankmandb.
@@ -62,6 +58,10 @@ TANKMAN_CONN_STR=Server=localhost;Port=5432;Database=tankmandb;User Id=postgres;
 ./tankman
 ```
 
+## Docker
+
+Alternatively you can pull our docker images. [Coming soon. Help wanted.]
+
 ## ⚠️ Caution 
 
-Tankman is an internal service which should be accessible only from your backend apps. Make sure that you don't expose Tankman ports publicly accessible.
+Tankman is an internal service which should be accessible only from your backend apps. Make sure that you don't expose Tankman ports publicly.

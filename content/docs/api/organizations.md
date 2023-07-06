@@ -69,7 +69,7 @@ Pagination is done with the `from` and `limit` query parameters.
 HTTP GET /orgs?from=10&limit=100
 ```
 
-To get a single organization (as a list with one item), specific the Org's id.
+To get a single organization (as a list with one item), specify the Org's id.
 
 ```tpl
 HTTP GET /orgs/{orgId}

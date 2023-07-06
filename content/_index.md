@@ -25,8 +25,6 @@ Tankman is NOT an Identity and Authentication server. But it can play well with 
 
 Tankman is for startups who want a self-hosted, lightweight solution. It provides basic primitives for authorization; which is more often than not what you'll need.
 
-To see how Tankman should be deployed, see [Deploying Tankman](https://example.com).
-
 ## It's an early Beta
 
 Tankman is quite new and you might find a few issues. We expect to iron them out over the next few months and release the first version in Q4 2023. We'll need help - you're invited to [join us on GitHub](https://github.com/lesser-app/tankman).

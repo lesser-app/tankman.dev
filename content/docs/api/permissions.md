@@ -3,169 +3,154 @@ weight: 5
 bookFlatSection: true
 title: "Permissions"
 ---
-# Organizations
+# Permissions
 
-Organizations are at the root of the entity hierarchy, and should be the first thing you should create. You may create as many orgs are you need.
+Permissions are entities which determine whether a Role or a User has access to a Resource. Permissions also have an "action" property which specifies what the Role or User is allowed to do with the Resource.
 
-## Create an Organization
-
-```tpl
-HTTP POST /orgs
-```
-
-Payload:
-
-```json
-{
-	"id": "example.com", // a unique id
-	"data": "data for example.com" // any string
-}
-```
-
-Response:
-
-```json
-{
-	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:32:18.4557911Z",
-		"data": "data for example.com",
-		"properties": {}
-	}
-}
-```
-
-## Get Organizations
+## Creating a Role Permission
 
 ```tpl
-HTTP GET /orgs
-```
-
-Response:
-
-```json
-{
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {}
-		},
-    {
-			"id": "agilehead.com",
-			"createdAt": "2023-07-01T01:38:18.764642Z",
-			"data": "some other data",
-			"properties": {}
-		}
-	]
-}
-```
-
-Pagination is done with the `from` and `limit` query parameters.
-
-```tpl
-HTTP GET /orgs?from=10&limit=100
-```
-
-To get a single organization (as a list with one item), specific the Org's id.
-
-```tpl
-HTTP GET /orgs/{orgId}
-
-# For example
-HTTP GET /orgs/example.com
-```
-
-You can specify multiple Org ids.
-
-```tpl
-HTTP GET /orgs/{orgId1,orgId2}
-
-# For example
-HTTP GET /orgs/example.com,northwind
-```
-
-## Update an Organization
-
-```tpl
-HTTP PUT /orgs/{orgId}
-
-# For example:
-HTTP PUT /orgs/example.com
-```
-
-Payload:
-
-```json
-{
-	"data": "new data for example.com"
-}
-```
-
-Response:
-
-```json
-{
-	"data": {
-		"id": "example.com",
-		"createdAt": "2023-07-02T01:38:18.764642Z",
-		"data": "new data for example.com",
-		"properties": {}
-	}
-}
-```
-
-## Delete an Organization
-
-Deleting an organization will delete everything associated with it - resources, roles, users, permissions etc. This is indeed a very destructive operation.
-
-```tpl
-HTTP DELETE /orgs/{orgId}
-
-# For example:
-HTTP DELETE /orgs/example.com
-```
-
-Since it can cause a lot of damage, there's an CLI option to require a safetyKey for deleting organizations. 
-
-You need to start tankman like this:
-
-```sh
-./tankman --safety-key $SAFETY_KEY
-
-# For example:
-./tankman --safety-key NOFOOTGUN
-```
-
-With the `--safety-key` option, HTTP DELETE should specify the safetyKey parameter as a query string.
-
-```tpl
-HTTP DELETE /orgs/{orgId}?safetyKey=$SAFETY_KEY
-
-# For example
-HTTP DELETE /orgs/example.com?safetyKey=NOFOOTGUN
-```
-
-
-## Add a Custom Property
-
-You can add custom string properties to an Organization entity.
-
-```tpl
-HTTP PUT /orgs/{orgId}/properties/{propertyName}
+HTTP POST /orgs/{orgId}/roles/{roleId}/permissions
 
 For example:
-HTTP PUT /orgs/example.com/properties/country
+HTTP POST /orgs/example.com/roles/admins/permissions
 ```
-
 
 Payload:
 
 ```json
 {
-	"value": "India"
+	"resourceId": "/root/drives/c/home",
+	"roleId": "admins",
+	"action": "write"
 }
+```
+
+Response:
+
+```json
+{
+	"roleId": "admins",
+	"resourceId": "/root/drives/c/home",
+	"action": "write",
+	"createdAt": "2023-06-30T14:04:17.919562Z",
+	"orgId": "agilehead.com"
+}
+```
+
+The example above specifies that the role "admins" can "write" to the resource "/root/drives/c/home". Note that the resource should already exist. See the [Resources API](../resources) to learn how to create a resource.
+
+
+## Creating a User Permission
+
+```tpl
+HTTP POST /orgs/{orgId}/users/{userId}/permissions
+
+For example:
+HTTP POST /orgs/example.com/users/user3/permissions
+```
+
+Payload:
+
+```json
+{
+	"resourceId": "/root/drives/c/home",
+	"userId": "user3",
+	"action": "read"
+}
+```
+
+Response:
+
+```json
+{
+	"userId": "admins",
+	"resourceId": "/root/drives/c/home",
+	"action": "write",
+	"createdAt": "2023-06-30T14:04:17.919562Z",
+	"orgId": "agilehead.com"
+}
+```
+
+The example above specifies that the user "user3" can "read" the resource "/root/drives/c/home".
+
+## Getting Effective Permissions for a User
+
+Effective Permissions for a user is the combined list of all user permissions defined for the specifc user, and role permissions for the roles in which the user is a member.
+
+For example, if the user "john" is a member of roles "admins" and "devops", effective permissions to a resource is the combined list of john's permissions to the specific resource, the role "admins" permissions to the resource, and the role "devops" permissions to the resource.
+
+```tpl
+HTTP GET /orgs/{orgId}/users/{userId}/effective-permissions/{action}/{resourceId}
+For example:
+HTTP GET /orgs/example.com/users/user3/effective-permissions/write/root/drives/c/home
+```
+
+Response:
+
+```json
+[
+	{
+		"roleId": "admins",
+		"resourceId": "/root/drives/c/home",
+		"action": "write",
+		"createdAt": "2023-06-30T14:04:17.919562Z",
+		"orgId": "agilehead.com"
+	}
+]
+```
+
+
+## Wildcard actions
+
+You can specify a wildcard (tilde "~", by default) to get all permissions irrespective of action.
+
+For example, the following will fetch read and write actions:
+
+```tpl
+HTTP GET /orgs/example.com/users/user3/effective-permissions/~/root/drives/c/home
+```
+
+Response:
+
+```json
+[
+	{
+		"userId": "user3",
+		"resourceId": "/root/drives/c/home",
+		"action": "read",
+		"createdAt": "2023-06-30T14:04:01.837162Z",
+		"orgId": "agilehead.com"
+	},
+	{
+		"roleId": "admins",
+		"resourceId": "/root/drives/c/home",
+		"action": "write",
+		"createdAt": "2023-06-30T14:04:17.919562Z",
+		"orgId": "agilehead.com"
+	}
+]
+```
+
+## Wildcard Resource Paths
+
+You can specify a wildcard in the resource path as well.
+
+For example, the following will return all resources starting with "/root/drives". Note that we've used a wild card action as well.
+
+```tpl
+HTTP GET /orgs/example.com/users/user3/effective-permissions/~/root/drives/~
+```
+
+## Getting just Role Permissions
+
+You can get permissions for a role to a resource thus.
+
+```tpl
+HTTP GET /orgs/{orgId}/roles/{roleId}/permissions
+
+For example:
+HTTP GET /orgs/example.com/roles/admins/permissions
 ```
 
 Response:
@@ -173,125 +158,86 @@ Response:
 ```json
 {
 	"data": {
-		"name": "country",
-		"value": "India",
-		"hidden": false,
-		"createdAt": "2023-07-02T02:19:15.499711Z"
+		"roleId": "admins",
+		"resourceId": "/root/drives/c/home",
+		"action": "write",
+		"createdAt": "2023-07-06T14:35:31.3918132Z",
+		"orgId": "example.com"
 	}
 }
 ```
 
-When properties are added to an Org, they are returned when the Org is fetched.
+## Getting just User Permissions
 
-For example, `GET /orgs/example.com` will retrieve the following response. Note the added properties object.
-
-```json
-{
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "data for example.com",
-			"properties": {
-				"country": "India"
-			}
-		}
-	]
-}
-```
-
-## Get the value of a property
-
-Properties are usually read as a part of the fetching entity; Org in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
+You can get permissions for a user to a resource thus.
 
 ```tpl
-HTTP GET /orgs/{orgId}/properties/{propertyName}
-
-# For example:
-HTTP GET /orgs/example.com/properties/country
-```
-
-Response:
-
-```json
-{
-	"data": [
-		{
-			"name": "country",
-			"value": "India",
-			"hidden": false,
-			"createdAt": "2023-07-02T02:19:15.499711Z"
-		}
-	]
-}
-```
-
-
-## Delete a Custom Property 
-
-```tpl
-HTTP DELETE /orgs/{orgId}/properties/{propertyName}
-
-# For example:
-HTTP DELETE /orgs/example.com/properties/country
-```
-
-## Creating Hidden Properties
-
-When a property is hidden, it will not be included when the organization is fetched. To create a hidden property, add the hidden flag when creating the property.
-
-To create a Hidden Property:
-
-```tpl
-HTTP PUT /orgs/{orgId}/properties/{propertyName}
-
-# For example:
-HTTP PUT /orgs/example.com/properties/revenue
-```
-
-Payload should include the `hidden` attribute:
-
-```json
-{
-  "value": "2340000",
-  "hidden": true
-}
-```
-
-To include a hidden property when querying Orgs, it should be explicitly mentioned. Note that properties which aren't hidden are always included.
-
-```tpl
-HTTP GET /orgs?properties={propertyName}
+HTTP GET /orgs/{orgId}/users/{userId}/permissions
 
 For example:
-HTTP GET /orgs?properties={revenue}
+HTTP GET /orgs/example.com/users/user3/permissions
 ```
 
 Response:
 
 ```json
 {
-	"data": [
-		{
-			"id": "example.com",
-			"createdAt": "2023-07-02T01:38:18.764642Z",
-			"data": "new data for example.com",
-			"properties": {
-				"country": "India",
-				"revenue": "2340000"
-			}
-		}
-	]
+	"data": {
+		"userId": "user3",
+		"resourceId": "/root/drives/c/home",
+		"action": "read",
+		"createdAt": "2023-07-06T14:35:31.3918132Z",
+		"orgId": "example.com"
+	}
 }
 ```
 
-## Filtering by Property
+## Deleting Role Permissions
 
-Organizations may be filtered by the custom property.
+You can delete permissions for a role to a resource thus.
 
 ```tpl
-HTTP GET /orgs?properties.{propertyName}={propertyValue}
+HTTP DELETE /orgs/{orgId}/roles/{roleId}/permissions/{action}/{resourceId}
 
-# For example, fetch orgs with country = India
-HTTP GET /orgs?properties.country=India
+For example:
+HTTP DELETE /orgs/example.com/roles/admins/permissions/read/root/drives/c/home
+```
+
+Response:
+
+```json
+{
+	"data": {
+		"roleId": "admins",
+		"resourceId": "/root/drives/c/home",
+		"action": "write",
+		"createdAt": "2023-07-06T14:35:31.3918132Z",
+		"orgId": "example.com"
+	}
+}
+```
+
+## Deleting User Permissions
+
+You can delete permissions for a user to a resource thus.
+
+```tpl
+HTTP DELETE /orgs/{orgId}/users/{userId}/permissions/{action}/{resourceId}
+
+For example:
+HTTP DELETE /orgs/example.com/users/admins/permissions/read/root/drives/c/home
+```
+
+Response:
+
+```json
+{
+	"data": {
+		"userId": "admins",
+		"resourceId": "/root/drives/c/home",
+		"action": "write",
+		"createdAt": "2023-07-06T14:35:31.3918132Z",
+		"orgId": "example.com"
+	}
+}
 ```
