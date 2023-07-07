@@ -21,9 +21,6 @@ It's important to note that Tankman does not function as an Identity and Authent
 
 Tankman is available on GitHub under the MIT license. You can download it as a binary for your platform; and it utilizes PostgreSQL as its underlying database.
 
-## What can it do?
-
-
 ## Why should I use Tankman over Auth0, Google Zanzibar etc?
 
 Tankman is for people who prefer a self-hosted, lightweight solution. It provides essential primitives for authorization, which are often sufficient for most use cases.
