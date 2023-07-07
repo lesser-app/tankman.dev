@@ -17,7 +17,7 @@ Download binaries for your platform
 - [Windows x86-64 (untested)](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-win-x64.exe)
 - [Source Code](https://github.com/lesser-app/tankman)
 
-## Setting up Tankman
+## Configuring Tankman
 
 Step 1: Create a new database for tankman on your PostgreSQL server. Call it whatever you want, but most people call it tankmandb.
 
