@@ -118,6 +118,14 @@ Response:
 }
 ``` 
 
+By using a wildcard in place of the orgId, you can even search by identityProvider across orgs if your application allows users to be in multiple orgs.
+
+For example, to find users across orgs tied to the identity Google/jeswinpk@agilehead.com, you could use the following query:
+
+```tpl
+HTTP GET /orgs/~/users/?identityProvider=Google&identityProviderUserId=jeswinpk@agilehead.com
+```
+
 
 ## Update a user
 
