@@ -90,6 +90,34 @@ HTTP GET /orgs/{orgId}/users/{userId}
 HTTP GET /orgs/example.com/users/user3,user5
 ```
 
+## Get Users by Identity Provider 
+
+```tpl
+HTTP GET /orgs/{orgId}/users/?identityProvider={identityProvider}&identityProviderUserId={identityProviderUserId}
+
+For example:
+HTTP GET /orgs/example.com/users/?identityProvider=Google&identityProviderUserId=jeswinpk@agilehead.com
+```
+
+Response:
+
+```json
+{
+	"data": [
+		{
+			"roleIds": [],
+			"properties": {},
+			"id": "user3",
+			"data": "data for aser3",
+			"identityProvider": "Google",
+			"identityProviderUserId": "jeswinpk@agilehead.com",
+			"createdAt": "2023-07-06T13:01:26.659479Z",
+			"orgId": "example.com"
+		}
+	]
+}
+``` 
+
 
 ## Update a user
 
