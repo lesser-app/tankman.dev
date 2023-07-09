@@ -13,7 +13,7 @@ title: "Installation"
 The following are supported:
 - linux x86-64
 - linux x86-64 musl
-- ARM 64 bit Linux distros
+- arm64 linux distros
 - macOS M1 (untested)
 - macOS x64 (untested)
 - Windows x86-64 (untested)
